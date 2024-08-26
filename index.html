@@ -1,1 +1,121 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlikely Gems</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+        .section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .title {
+            font-size: 2rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .parallax-object {
+            position: absolute;
+            opacity: 0;
+            transition: all 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="section" id="section1">
+        <h1 class="title">Unlikely Gems</h1>
+    </div>
+    <div class="section" id="section2">
+        <h1 class="title">Episodes</h1>
+    </div>
+    <div class="section" id="section3">
+        <h1 class="title">Products</h1>
+    </div>
+    <div class="section" id="section4">
+        <h1 class="title">Auctions</h1>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script>
+        const sections = document.querySelectorAll('.section');
+        const titles = document.querySelectorAll('.title');
+
+        function createParallaxObjects(section, count) {
+            for (let i = 0; i < count; i++) {
+                const obj = document.createElement('div');
+                obj.classList.add('parallax-object');
+                obj.style.width = `${Math.random() * 50 + 20}px`;
+                obj.style.height = `${Math.random() * 50 + 20}px`;
+                obj.style.background = `url(https://picsum.photos/50/50?random=${Math.random()})`;
+                obj.style.backgroundSize = 'cover';
+                obj.style.left = `${Math.random() * 100}%`;
+                obj.style.top = `${Math.random() * 100}%`;
+                section.appendChild(obj);
+            }
+        }
+
+        sections.forEach(section => createParallaxObjects(section, 5));
+
+        function animateTitle(title) {
+            const chars = title.textContent.split('');
+            title.textContent = '';
+            chars.forEach(char => {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.opacity = '0';
+                span.style.display = 'inline-block';
+                title.appendChild(span);
+            });
+
+            gsap.to(title.children, {
+                opacity: 1,
+                duration: 0.5,
+                stagger: 0.1,
+                ease: "power2.out",
+                x: () => gsap.utils.random(-100, 100),
+                y: () => gsap.utils.random(-100, 100),
+            });
+        }
+
+        function handleScroll() {
+            sections.forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                const title = titles[index];
+                const objects = section.querySelectorAll('.parallax-object');
+
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    const progress = 1 - (rect.top / window.innerHeight);
+                    
+                    if (!title.animated) {
+                        animateTitle(title);
+                        title.animated = true;
+                    }
+
+                    objects.forEach(obj => {
+                        const speed = parseFloat(obj.dataset.speed) || Math.random() * 0.5 + 0.5;
+                        const yPos = (window.innerHeight / 2 - rect.top) * speed;
+                        gsap.to(obj, { y: yPos, opacity: progress, duration: 0.5 });
+                    });
+                } else {
+                    title.animated = false;
+                    title.textContent = title.textContent.replace(/\s/g, '');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Initial call to set up the first view
+    </script>
+</body>
+</html>
