@@ -1,6 +1,3 @@
-// GitHub Repo : https://github.com/aryan-tayal/Mountains-Parallax
-// Live Site : https://aryan-tayal.github.io/Mountains-Parallax/
-
 const mountainLeft = document.querySelector('#mountain_left');
 const mountainRight = document.querySelector('#mountain_right');
 const cloud1 = document.querySelector('#clouds_1');
