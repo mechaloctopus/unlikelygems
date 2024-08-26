@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +23,8 @@
             font-size: 2rem;
             color: white;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
         }
         .parallax-object {
             position: absolute;
@@ -50,8 +51,10 @@
     <script>
         const sections = document.querySelectorAll('.section');
         const titles = document.querySelectorAll('.title');
+        const goldenRatio = 1.618;
 
         function createParallaxObjects(section, count) {
+            const title = section.querySelector('.title');
             for (let i = 0; i < count; i++) {
                 const obj = document.createElement('div');
                 obj.classList.add('parallax-object');
@@ -59,22 +62,31 @@
                 obj.style.height = `${Math.random() * 50 + 20}px`;
                 obj.style.background = `url(https://picsum.photos/50/50?random=${Math.random()})`;
                 obj.style.backgroundSize = 'cover';
-                obj.style.left = `${Math.random() * 100}%`;
-                obj.style.top = `${Math.random() * 100}%`;
-                section.appendChild(obj);
+                
+                // Position objects using golden ratio
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 100 + 50; // pixels
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance * goldenRatio;
+                
+                obj.style.left = `calc(50% + ${x}px)`;
+                obj.style.top = `calc(50% + ${y}px)`;
+                
+                section.insertBefore(obj, title);
             }
         }
 
         sections.forEach(section => createParallaxObjects(section, 5));
 
-        function animateTitle(title) {
+        function animateTitle(title, progress) {
             const chars = title.textContent.split('');
-            title.textContent = '';
+            title.innerHTML = '';
             chars.forEach(char => {
                 const span = document.createElement('span');
                 span.textContent = char;
                 span.style.opacity = '0';
                 span.style.display = 'inline-block';
+                span.style.position = 'relative';
                 title.appendChild(span);
             });
 
@@ -83,9 +95,19 @@
                 duration: 0.5,
                 stagger: 0.1,
                 ease: "power2.out",
-                x: () => gsap.utils.random(-100, 100),
-                y: () => gsap.utils.random(-100, 100),
             });
+
+            // Animate letters out when scrolling away
+            if (progress > 0.7 || progress < 0.3) {
+                gsap.to(title.children, {
+                    x: (i) => gsap.utils.random(-100, 100),
+                    y: (i) => gsap.utils.random(-100, 100),
+                    opacity: 0,
+                    duration: 0.5,
+                    stagger: 0.05,
+                    ease: "power2.in",
+                });
+            }
         }
 
         function handleScroll() {
@@ -97,15 +119,21 @@
                 if (rect.top < window.innerHeight && rect.bottom > 0) {
                     const progress = 1 - (rect.top / window.innerHeight);
                     
-                    if (!title.animated) {
-                        animateTitle(title);
+                    if (!title.animated || progress < 0.3 || progress > 0.7) {
+                        animateTitle(title, progress);
                         title.animated = true;
                     }
 
                     objects.forEach(obj => {
                         const speed = parseFloat(obj.dataset.speed) || Math.random() * 0.5 + 0.5;
+                        const xPos = (window.innerWidth / 2 - rect.left) * speed;
                         const yPos = (window.innerHeight / 2 - rect.top) * speed;
-                        gsap.to(obj, { y: yPos, opacity: progress, duration: 0.5 });
+                        gsap.to(obj, { 
+                            x: xPos, 
+                            y: yPos, 
+                            opacity: progress > 0.3 && progress < 0.7 ? 1 : 0, 
+                            duration: 0.5 
+                        });
                     });
                 } else {
                     title.animated = false;
