@@ -89,16 +89,10 @@ footer a i:hover{
 #mountain_left, #mountain_right {
     position: absolute;
     bottom: 0;
-    width: 50%; /* Adjust this value to make the mountains smaller or larger */
+    width: 50%; /* Adjust as needed */
     height: auto;
     object-fit: contain;
-    transform-origin: bottom;
 }
 
-#mountain_left {
-    left: 0;
-}
-
-#mountain_right {
-    right: 0;
-}
+#mountain_left { left: 0; }
+#mountain_right { right: 0; }
