@@ -85,3 +85,20 @@ font-size:1.3rem;}
 footer a i:hover{
   transform:translateY(-10px);
 }
+
+#mountain_left, #mountain_right {
+    position: absolute;
+    bottom: 0;
+    width: 50%; /* Adjust this value to make the mountains smaller or larger */
+    height: auto;
+    object-fit: contain;
+    transform-origin: bottom;
+}
+
+#mountain_left {
+    left: 0;
+}
+
+#mountain_right {
+    right: 0;
+}
