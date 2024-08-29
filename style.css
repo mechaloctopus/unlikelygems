@@ -28,9 +28,11 @@ body {
     background:linear-gradient(to top,#fff,transparent);
     z-index: 1000;
 }
-#man{
+#man {
     top: inherit;
     bottom: 0;
+    transform: scale(0.25); /* This will reduce the size to 1/4 */
+    transform-origin: bottom center; /* This ensures scaling happens from the bottom center */
 }
 section img{
     position: absolute;
