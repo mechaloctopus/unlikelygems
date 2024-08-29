@@ -29,10 +29,13 @@ body {
     z-index: 1000;
 }
 #man {
-    top: inherit;
+    position: absolute;
     bottom: 0;
-    transform: scale(0.25); /* This will reduce the size to 1/4 */
-    transform-origin: bottom center; /* This ensures scaling happens from the bottom center */
+    left: 50%;
+    transform: translateX(-50%) scale(0.25); /* Center horizontally and scale down */
+    transform-origin: bottom center;
+    height: auto; /* Allow the height to adjust proportionally */
+    width: 25%; /* Set the width to 25% of its container */
 }
 section img{
     position: absolute;
