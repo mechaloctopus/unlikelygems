@@ -32,7 +32,7 @@ body {
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translateX(-50%) scale(0.25); /* Center horizontally and scale down */
+    transform: translateX(-50%) scale(1); /* Center horizontally and scale down */
     transform-origin: bottom center;
     height: auto; /* Allow the height to adjust proportionally */
     width: 25%; /* Set the width to 25% of its container */
